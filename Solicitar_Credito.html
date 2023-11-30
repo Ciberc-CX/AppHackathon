@@ -54,6 +54,20 @@
         }
     </style>
 
+    <script type="text/javascript" charset="utf-8">
+        (function (g, e, n, es, ys) {
+        g['_genesysJs'] = e;
+        g[e] = g[e] || function () {
+            (g[e].q = g[e].q || []).push(arguments)
+        };
+        g[e].t = 1 * new Date();
+        g[e].c = es;
+        ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+        })(window, 'Genesys', 'https://apps.mypurecloud.com/genesys-bootstrap/genesys.min.js', {
+        environment: 'prod',
+        deploymentId: '736f343b-0e81-49ef-aa3a-4e3188ff319e'
+        });
+    </script>
 </head>
 <body>
 
@@ -64,7 +78,7 @@
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="PortalDeConocimiento.html">Portal de Conocimiento</a></li>
                 <li><a href="#">g-Hackathon</a></li>
-                <li><a href="#">Abandonar</a></li>
+                <li><a href="Abandonar.html">Abandonar</a></li>
                 <li><a href="#">Contacto</a></li>
             </ul>
         </nav>
@@ -73,15 +87,15 @@
 
     <div class="container">
         <h1>Solicitud de Crédito Emprendedor</h1>
-        <form id="creditForm">
+        <form id="creditForm" name="creditForm">
             <label for="amount">Cantidad de Dinero:</label>
-            <input type="text" id="amount" placeholder="Escribe la cantidad">
+            <input type="text" id="amount" name="amount" placeholder="Escribe la cantidad">
             <label for="term">Plazo (meses):</label>
-            <input type="number" id="term" placeholder="Escribe el plazo">
+            <input type="number" id="term" name="term" placeholder="Escribe el plazo">
         </form>
 
         <h1>Datos del Solicitante</h1>
-        <form id="applicantForm">
+        <form id="applicantForm" name="applicantForm">
             <label for="name">Nombre del Solicitante:</label>
             <input type="text" id="name" name="name" placeholder="Escribe tu nombre">
             <label for="ndi">Identificación:</label>
@@ -146,6 +160,39 @@
                 console.log(error);
             });
         }
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        // Genesys("subscribe", "Launcher.ready" , function(o){
+        //   console.log("The queue works!");
+        // });
+
+        Genesys("subscribe", "Journey.ready", function() {
+            Genesys("command", "Journey.formsTrack", {
+                selector: "#creditForm",
+                formName: "creditForm",
+                captureFormDataOnAbandon: true,
+                captureFormDataOnSubmit: false,
+                
+                customAttributes: { 
+                    amount: false,
+                    term: false
+                },
+            });
+            Genesys("command", "Journey.formsTrack", {
+                selector: "#applicantForm",
+                formName: "applicantForm",
+                captureFormDataOnAbandon: true,
+                captureFormDataOnSubmit: false,
+                
+                customAttributes: { 
+                    name: false,
+                    ndi: false,
+                    email: false,
+                    phone: false
+                },
+            });
+        });
     </script>
 </body>
 </html>

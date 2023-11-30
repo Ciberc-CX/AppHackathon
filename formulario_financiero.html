@@ -53,6 +53,20 @@
             margin-right: auto;
         }
     </style>
+    <script type="text/javascript" charset="utf-8">
+        (function (g, e, n, es, ys) {
+        g['_genesysJs'] = e;
+        g[e] = g[e] || function () {
+            (g[e].q = g[e].q || []).push(arguments)
+        };
+        g[e].t = 1 * new Date();
+        g[e].c = es;
+        ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+        })(window, 'Genesys', 'https://apps.mypurecloud.com/genesys-bootstrap/genesys.min.js', {
+        environment: 'prod',
+        deploymentId: '736f343b-0e81-49ef-aa3a-4e3188ff319e'
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -70,26 +84,26 @@
 
     <div class="container">
         <h1>Información Financiera ghackathon</h1>
-        <form id="Financiera">
+        <form id="Financiera" name="FormFinanciera">
             <label for="text1">Fecha de Nacimiento:</label>
-            <input type="text" id="text1" placeholder="Escribe tu fecha de nacimiento">
+            <input type="text" id="nacimiento" name="nacimiento" placeholder="Escribe tu fecha de nacimiento">
             <label for="text1">Dirección de Residencia:</label>
-            <input type="text" id="text2" placeholder="Escribe tu dirección de residencia">
+            <input type="text" id="direccion" name="direccion" placeholder="Escribe tu dirección de residencia">
             <label for="phone">No de personas que dependen de usted:</label>
-            <input type="number" id="text2" placeholder="Escribe No de personas">
+            <input type="number" id="no_personas" name="no_personas" placeholder="Escribe No de personas">
             <!--<label for="phone">Nivel de Estudio:</label>
             <input type="text" id="text2" placeholder="Escriba su nivel de estudio">-->
             <label for="text1">Cuantas mascotas tiene?:</label>
-            <input type="number" id="text" placeholder="Escribe número de mascotas">
+            <input type="number" id="mascotas" name="mascotas" placeholder="Escribe número de mascotas">
         </form>
 
         <div class="containerLuna">
                 <h1>Pregunta clave para el scoring crediticio</h1>
                 <form id="Financiera">
                     <label for="text1">¿Cuantas veces ha ido a la luna?:</label>
-                    <input type="number" id="text" placeholder="escriba las veces que ha ido a la luna en los últimos 2 años">
+                    <input type="number" id="ida_luna" name="ida_luna" placeholder="escriba las veces que ha ido a la luna en los últimos 2 años">
                     <label for="text1">Describa su experiencia en la luna:</label>
-                    <input type="text" id="text" placeholder="Describa su experiencia en la luna, no relate tanto">
+                    <input type="text" id="experiencia" name="experiencia" placeholder="Describa su experiencia en la luna, no relate tanto">
                 </form>
                 <button type="button" onclick="submitAllCreditForm()">Paso 2: Finaliza tu solicitud</button>
     </div>
@@ -100,5 +114,29 @@
             window.location.href = 'Agradecimientos.html';
         }
     </script>
+
+<script type="text/javascript" charset="utf-8">
+    // Genesys("subscribe", "Launcher.ready" , function(o){
+    //   console.log("The queue works!");
+    // });
+
+    Genesys("subscribe", "Journey.ready", function() {
+        Genesys("command", "Journey.formsTrack", {
+            selector: "#Financiera",
+            formName: "FormFinanciera",
+            captureFormDataOnAbandon: true,
+            captureFormDataOnSubmit: false,
+            
+            customAttributes: { 
+                nacimiento: false,
+                direccion: false,
+                no_personas:false,
+                mascotas:false,
+                ida_luna:false,
+                experiencia: false
+            },
+        });
+    });
+  </script>
 </body>
 </html>

@@ -105,7 +105,7 @@
                     <label for="text1">Describa su experiencia en la luna:</label>
                     <input type="text" id="experiencia" name="experiencia" placeholder="Describa su experiencia en la luna, no relate tanto">
                 </form>
-                <button type="button" onclick="submitAllCreditForm()">Paso 2: Finaliza tu solicitud</button>
+                <button type="button" id="btnSubmit" onclick="submitAllCreditForm()">Paso 2: Finaliza tu solicitud</button>
     </div>
 
     <script>
@@ -135,6 +135,10 @@
                 ida_luna:false,
                 experiencia: false
             },
+        });
+
+        Genesys("command", "Journey.trackClickEvents", {
+            clickEvents: [{ selector: "button#btnSubmit", eventName: "cliente_nuevo" }]
         });
     });
   </script>

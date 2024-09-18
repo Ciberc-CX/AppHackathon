@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitud de Crédito G-Hackathon</title>
+    <title>Solicitud de Crédito</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         body {
@@ -53,47 +52,31 @@
             margin-right: auto;
         }
     </style>
-
-    <script type="text/javascript" charset="utf-8">
-        (function (g, e, n, es, ys) {
-        g['_genesysJs'] = e;
-        g[e] = g[e] || function () {
-            (g[e].q = g[e].q || []).push(arguments)
-        };
-        g[e].t = 1 * new Date();
-        g[e].c = es;
-        ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
-        })(window, 'Genesys', 'https://apps.mypurecloud.com/genesys-bootstrap/genesys.min.js', {
-        environment: 'prod',
-        deploymentId: '736f343b-0e81-49ef-aa3a-4e3188ff319e'
-        });
-    </script>
+<script type="text/javascript" charset="utf-8">
+    (function (g, e, n, es, ys) {
+      g['_genesysJs'] = e;
+      g[e] = g[e] || function () {
+        (g[e].q = g[e].q || []).push(arguments)
+      };
+      g[e].t = 1 * new Date();
+      g[e].c = es;
+      ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+    })(window, 'Genesys', 'https://apps.usw2.pure.cloud/genesys-bootstrap/genesys.min.js', {
+      environment: 'prod-usw2',
+      deploymentId: 'cb6e953d-d323-4599-b68e-b007b927f5df'
+    });
+  </script>
 </head>
 <body>
-
-
     <header>
          <nav>
             <ul>
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="PortalDeConocimiento.html">Portal de Conocimiento</a></li>
-                <li><a href="#">g-Hackathon</a></li>
-                <li><a href="Abandonar.html">Abandonar</a></li>
-                <li><a href="#">Contacto</a></li>
             </ul>
         </nav>
     </header>
-
-
     <div class="container">
-        <h1>Solicitud de Crédito Emprendedor</h1>
-        <form id="creditForm" name="creditForm">
-            <label for="amount">Cantidad de Dinero:</label>
-            <input type="text" id="amount" name="amount" placeholder="Escribe la cantidad">
-            <label for="term">Plazo (meses):</label>
-            <input type="number" id="term" name="term" placeholder="Escribe el plazo">
-        </form>
-
         <h1>Datos del Solicitante</h1>
         <form id="applicantForm" name="applicantForm">
             <label for="name">Nombre del Solicitante:</label>
@@ -104,14 +87,16 @@
             <input type="email" id="email" name="email"  placeholder="Escribe tu correo">
             <label for="phone">Número Telefónico:</label>
             <input type="text" id="phone"  name="phone" placeholder="Escribe tu número de contacto">
-            <button type="button" onclick="submitCreditForm()">Paso 1: Envía tu solicitud</button>
+            <button type="button" onclick="submitCreditForm()">Envía tu solicitud</button>
+            <button type="button" onclick="abandonCreditForm()">Cancelar</button>
+            
         </form>
     </div>
 
     <script>
         function submitCreditForm() {
-            const amount = document.getElementById('amount').value;
-            const term = document.getElementById('term').value;
+            //const amount = document.getElementById('amount').value;
+            //const term = document.getElementById('term').value;
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const ndi = document.getElementById('ndi').value;
@@ -123,9 +108,7 @@
                 "NDI": ndi,
                 "Mobile": phone,
                 "Correo": email,
-                "Monto": amount,
                 "EstadoCredito":"En Estudio",
-                "Cuota":term
             }
             const data={
                 "PartitionKey": Date.now().toString(),
@@ -139,8 +122,7 @@
                 if(response?.data?.value?.length > 0) {
                     axios.put(`https://gfintech.table.core.windows.net/LoanRequest(PartitionKey='${response?.data?.value[0].PartitionKey}', RowKey='${response?.data?.value[0].RowKey}')?sv=2022-11-02&ss=t&srt=sco&sp=rwdlacu&se=2024-11-20T07:08:27Z&st=2023-11-19T23:08:27Z&spr=https&sig=1%2BuAmErVkdSU2gGeoNyO%2Bgx1twrd8bpSroAb0xk%2BWmY%3D`, dataUpdate) 
                     .then(function (response) {
-                        alert("Super, Ya solicitaste un préstamo,  vamos a actualizar el registro, continúa con la información financiera...");
-                        window.location.href = "formulario_financiero.html";
+                        alert("Super, Ya solicitaste una tarjeta de crédito");
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -149,8 +131,20 @@
                     //Create
                     axios.post('https://gfintech.table.core.windows.net/LoanRequest?sv=2022-11-02&ss=t&srt=sco&sp=rwdlacu&se=2024-11-20T07:08:27Z&st=2023-11-19T23:08:27Z&spr=https&sig=1%2BuAmErVkdSU2gGeoNyO%2Bgx1twrd8bpSroAb0xk%2BWmY%3D', data)
                     .then(function (response) {
-                        alert("Solitud de préstamo enviado, continúa con la información financiera...");
-                        window.location.href = "formulario_financiero.html";
+                        alert("Solitud de tarjeta de crédito enviada");
+                        
+                        Genesys("command", "Journey.record", {
+                        eventName: "product_added",
+                        customAttributes: {
+                        "Nombre": name,
+                        "NDI": ndi,
+                        "Mobile": phone,
+                        "Correo": email,
+                        "EstadoCredito":"Solicitado",
+                    },
+                        traitsMapper: []
+                    });
+                        //window.location.href = "agradecimientos.html";
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -159,6 +153,30 @@
             }).catch(function (error) {
                 console.log(error);
             });
+        }
+    </script>
+       <script>
+        function abandonCreditForm() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const ndi = document.getElementById('ndi').value;
+            const phone = document.getElementById('phone').value;
+            alert("Estamos cancelando tu solicitud")
+            Genesys("command", "Journey.record", {
+                eventName: "product_canceled",
+                customAttributes: {
+                "Nombre": name,
+                "NDI": ndi,
+                "Mobile": phone,
+                "Correo": email,
+                "EstadoCredito":"Cancelado",
+            },
+                traitsMapper: []
+            });
+
+            document.getElementById("applicantForm").reset();
+
+            //window.location.href = "agradecimientos.html"; 
         }
     </script>
 
@@ -179,18 +197,25 @@
                     term: false
                 },
             });
-            Genesys("command", "Journey.formsTrack", {
+
+               const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const ndi = document.getElementById('ndi').value;
+                const phone = document.getElementById('phone').value;
+            
+                Genesys("command", "Journey.formsTrack", {
                 selector: "#applicantForm",
                 formName: "applicantForm",
                 captureFormDataOnAbandon: true,
                 captureFormDataOnSubmit: false,
-                
-                customAttributes: { 
-                    name: false,
-                    ndi: false,
-                    email: false,
-                    phone: false
-                },
+               
+               customAttributes: {
+                "Nombre": name,
+                "NDI": ndi,
+                "Mobile": phone,
+                "Correo": email,
+                "EstadoCredito":"Cancelado",
+                }
             });
         });
     </script>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Información Financiera g-hachathon</title>
+    <title>Información Financiera -hachathon</title>
     <style>
         body {
             background-color: #0074D9; /* Azul */
@@ -53,20 +53,20 @@
             margin-right: auto;
         }
     </style>
-    <script type="text/javascript" charset="utf-8">
-        (function (g, e, n, es, ys) {
-        g['_genesysJs'] = e;
-        g[e] = g[e] || function () {
-            (g[e].q = g[e].q || []).push(arguments)
-        };
-        g[e].t = 1 * new Date();
-        g[e].c = es;
-        ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
-        })(window, 'Genesys', 'https://apps.mypurecloud.com/genesys-bootstrap/genesys.min.js', {
-        environment: 'prod',
-        deploymentId: '736f343b-0e81-49ef-aa3a-4e3188ff319e'
-        });
-    </script>
+   <script type="text/javascript" charset="utf-8">
+    (function (g, e, n, es, ys) {
+      g['_genesysJs'] = e;
+      g[e] = g[e] || function () {
+        (g[e].q = g[e].q || []).push(arguments)
+      };
+      g[e].t = 1 * new Date();
+      g[e].c = es;
+      ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+    })(window, 'Genesys', 'https://apps.usw2.pure.cloud/genesys-bootstrap/genesys.min.js', {
+      environment: 'prod-usw2',
+      deploymentId: 'cb6e953d-d323-4599-b68e-b007b927f5df'
+    });
+  </script>
 </head>
 <body>
     <header>
@@ -74,9 +74,7 @@
             <ul>
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="PortalDeConocimiento.html">Portal de Conocimiento</a></li>
-                <li><a href="#">g-Hackathon</a></li>
                 <li><a href="Abandonar.html">Abandonar</a></li>
-                <li><a href="#">Contacto</a></li>
             </ul>
         </nav>
     </header>
@@ -125,8 +123,11 @@
             selector: "#Financiera",
             formName: "FormFinanciera",
             captureFormDataOnAbandon: true,
-            captureFormDataOnSubmit: false,
-            
+            captureFormDataOnSubmit: true,
+            traitsMapper: [
+                { fieldName: "firstName", traitName: "givenName" },
+                { fieldName: "lastName", traitName: "familyName" }
+            ],
             customAttributes: { 
                 nacimiento: false,
                 direccion: false,
@@ -140,6 +141,17 @@
         Genesys("command", "Journey.trackClickEvents", {
             clickEvents: [{ selector: "button#btnSubmit", eventName: "cliente_nuevo" }]
         });
+
+        Genesys("command", "Journey.record", {
+                eventName: "product_added",
+                customAttributes: {
+                    price: 20,
+                    code: "CDE-123",
+                    name: "Product",
+                    hasBatteries: false
+                },
+                traitsMapper: []
+                });
     });
   </script>
 </body>
